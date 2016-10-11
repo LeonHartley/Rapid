@@ -63,3 +63,17 @@ fastlane/report.xml
 fastlane/Preview.html
 fastlane/screenshots
 fastlane/test_output
+
+Packages/HeliumLogger-1.0.0/
+
+Packages/CCurl-0.2.2/
+
+Packages/CHTTPParser-0.3.0/
+
+Packages/Kitura-net-1.0.1/
+
+Packages/LoggerAPI-1.0.0/
+
+Packages/Socket-0.11.23/
+
+Packages/SSLService-0.11.38/

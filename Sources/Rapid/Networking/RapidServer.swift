@@ -8,6 +8,7 @@ class RapidServer {
     private var backlog: Int?
 
     private var listenerSocket: Socket?
+    private var socketManager: IncomingSocketManager?
 
     init() {} 
 
@@ -17,6 +18,7 @@ class RapidServer {
             self.backlog = backlog
             
             self.listenerSocket = try Socket.create()
+            self.socketManager = IncomingSocketManager()
 
             ListenerGroup.enqueueAsynchronously(on: DispatchQueue.global(), block: DispatchWorkItem(block: {
                 self.listen()
@@ -54,6 +56,6 @@ class RapidServer {
     }
 
     private func manageClientConection(socket clientSocket: Socket?) {
-
+        self.socketManager?.handle(socket: clientSocket!, processor: MessageProcessor())
     }
 }
