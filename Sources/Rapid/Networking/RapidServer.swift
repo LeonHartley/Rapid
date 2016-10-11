@@ -56,6 +56,12 @@ class RapidServer {
     }
 
     private func manageClientConection(socket clientSocket: Socket?) {
-        self.socketManager?.handle(socket: clientSocket!, processor: MessageProcessor())
+        let messageProcessor = MessageProcessor()
+        let session = Session(processor: messageProcessor)
+
+        messageProcessor.session = session
+        SessionManager.getInstance().addSession(session)
+
+        self.socketManager?.handle(socket: clientSocket!, processor: session.getProcessor())
     }
 }

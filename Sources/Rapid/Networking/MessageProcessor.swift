@@ -29,10 +29,11 @@ class MessageProcessor: IncomingSocketProcessor {
     enum State {
         case reset, initial, messageCompletelyRead
     }
-        /// The state of this handler
+
+    /// The state of this handler
     private(set) var state = State.initial
     
-    init() { }
+    public var session: Session?
 
     public func process(_ buffer: NSData) -> Bool {
         let result: Bool
@@ -55,22 +56,33 @@ class MessageProcessor: IncomingSocketProcessor {
     }
     
     public func write(from data: NSData) {
-        //handler?.write(from: data)
+        handler?.write(from: data)
     }
 
     public func write(from bytes: UnsafeRawPointer, length: Int) {
-        //handler?.write(from: bytes, length: length)
+        handler?.write(from: bytes, length: length)
     }
     
     public func close() {
-        //handler?.prepareToClose()
+        SessionManager.getInstance().removeSession(self.session!)
+
+        handler?.prepareToClose()
         //request.release()
     }
     
     private func parse(_ buffer: NSData) {
-        let str = String(data: buffer as Data, encoding: .utf8)
+        if let data = String(data: buffer as Data, encoding: .utf8) {
+            print("reading buffer with length: \(buffer.length) and data is \(data)")
 
-        Log.info("Message received: \(str!)")
+            if(data.characters.first! == "<") {
+                // policy
+                print("sending policy")
+                self.session!.write("<?xml version=\"1.0\"?>\r\n<!DOCTYPE cross-domain-policy SYSTEM \"/xml/dtds/cross-domain-policy.dtd\">\r\n<cross-domain-policy>\r\n<allow-access-from domain=\"*\" to-ports=\"*\" />\r\n</cross-domain-policy>\0")
+                //self.close()
+            } else {
+                print(data)
+            }
+        }
     }
     
     private func parsingComplete() {
