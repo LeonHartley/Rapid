@@ -1,5 +1,7 @@
+import Foundation
 import LoggerAPI
-import HeliumLogger 
+import HeliumLogger
+import Habbo
 
 // Initialise logging framework
 let helium = HeliumLogger()
@@ -7,7 +9,11 @@ helium.format = "[(%date)] [(%type)] [(%file)] - (%msg)"
 
 Log.logger = helium;
 
-Log.info("Rapid Server      Habbo Server written in Swift")
+if let header = habbo_b64_encode(206) {
+
+    print(String(cString: header))
+    print(habbo_b64_decode(header))
+}
 
 let application = Rapid(processArguments: CommandLine.arguments);
 
