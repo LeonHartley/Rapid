@@ -11,7 +11,6 @@ class MessageProcessor: IncomingSocketProcessor {
 
     public func process(_ buffer: NSData) -> Bool {
         parse(buffer)
-
         return true
     }
 
@@ -24,6 +23,7 @@ class MessageProcessor: IncomingSocketProcessor {
     }
 
     public func close() {
+        print("client disconnected")
         SessionManager.getInstance().removeSession(self.session!)
 
         handler?.prepareToClose()
@@ -40,6 +40,7 @@ class MessageProcessor: IncomingSocketProcessor {
                 self.close()
             } else {
                 // handle da messages
+                
             }
         }
     }
