@@ -1,5 +1,4 @@
 class Rapid {
-
     private var processArguments: [String]
 
     private var server: RapidServer?

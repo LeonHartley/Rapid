@@ -15,6 +15,6 @@ class MessageEvent {
     }
 
     func getMessageId() -> Int {
-
+        return 0
     }
 }

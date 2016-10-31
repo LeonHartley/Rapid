@@ -7,14 +7,15 @@ import Habbo
 let helium = HeliumLogger()
 helium.format = "[(%date)] [(%type)] [(%file)] - (%msg)"
 
-Log.logger = helium;
+Log.logger = helium
 
-if let header = habbo_b64_encode(206) {
+let messageBuffer = MessageBuffer(buffer: hh_buffer_create(1024))
 
-    print(String(cString: header))
-    print(habbo_b64_decode(header))
-}
+messageBuffer.writeString("hi")
+messageBuffer.reset()
 
-let application = Rapid(processArguments: CommandLine.arguments);
+print(messageBuffer.readString())
 
-application.start();
+let application = Rapid(processArguments: CommandLine.arguments)
+
+application.start()
