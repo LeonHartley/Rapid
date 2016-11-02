@@ -1,6 +1,7 @@
 import Foundation
 import KituraNet
 import LoggerAPI
+import Habbo
 
 class MessageProcessor: IncomingSocketProcessor {
     public weak var handler: IncomingSocketHandler?
@@ -23,7 +24,6 @@ class MessageProcessor: IncomingSocketProcessor {
     }
 
     public func close() {
-        print("client disconnected")
         SessionManager.getInstance().removeSession(self.session!)
 
         handler?.prepareToClose()
@@ -39,9 +39,20 @@ class MessageProcessor: IncomingSocketProcessor {
                 self.session!.write("<?xml version=\"1.0\"?>\r\n<!DOCTYPE cross-domain-policy SYSTEM \"/xml/dtds/cross-domain-policy.dtd\">\r\n<cross-domain-policy>\r\n<allow-access-from domain=\"*\" to-ports=\"*\" />\r\n</cross-domain-policy>\0")
                 self.close()
             } else {
-                // handle da messages
-                
+                // Create a buffer with the received message data
+                data.withCString { dataBuffer in
+                    let buffer = MessageBuffer(hh_buffer_create(UnsafeMutablePointer(mutating: dataBuffer), Int32(data.characters.count)))
+
+                    let length = buffer.readInt()
+                    let header = buffer.readShort()
+
+                    print("game packet received \(header)")
+                }
             }
         }
+    }
+
+    public func connectionClosed() {
+        print("connection closed")
     }
 }

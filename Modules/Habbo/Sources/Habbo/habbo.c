@@ -8,12 +8,16 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-hh_buffer_t *hh_buffer_create(int length) {
+hh_buffer_t *hh_buffer_create_empty(int length) {
+    return hh_buffer_create((char*) malloc(length), length);
+}
+
+hh_buffer_t *hh_buffer_create(char* base, int length) {
     hh_buffer_t *buffer = malloc(sizeof(hh_buffer_t));
 
     buffer->index = 0;
     buffer->length = length;
-    buffer->base = (char*) malloc(length);
+    buffer->base = base;
 
     return buffer;
 }
@@ -31,7 +35,6 @@ void hh_buffer_prepare(hh_buffer_t *buffer) {
 }
 
 void hh_buffer_free(hh_buffer_t *buffer) {
-    free(buffer->base);
     free(buffer);
 }
 

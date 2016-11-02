@@ -10,7 +10,9 @@ typedef struct {
     char *base;
 } hh_buffer_t;
 
-hh_buffer_t *hh_buffer_create(int length);
+hh_buffer_t *hh_buffer_create_empty(int length);
+
+hh_buffer_t *hh_buffer_create(char* base, int length);
 
 void hh_buffer_free(hh_buffer_t *buffer);
 

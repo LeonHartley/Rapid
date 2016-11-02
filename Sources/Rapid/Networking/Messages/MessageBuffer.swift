@@ -4,7 +4,7 @@ import Habbo
 class MessageBuffer {
     private var buffer: UnsafeMutablePointer<hh_buffer_t>
 
-    init(buffer: UnsafeMutablePointer<hh_buffer_t>) {
+    init(_ buffer: UnsafeMutablePointer<hh_buffer_t>) {
         self.buffer = buffer
     }
 
@@ -22,6 +22,20 @@ class MessageBuffer {
         } else {
             return "";
         }
+    }
+
+    public func readInt() -> Int {
+        let i = hh_buffer_read_int(buffer)
+        
+        return Int(i)
+    }
+
+    public func writeInt(_ i: Int) {
+        hh_buffer_write_int(Int32(i), buffer)
+    }
+
+    public func readShort() -> Int16 {
+        return hh_buffer_read_short(buffer)
     }
 
     public func writeString(_ str: String) {
