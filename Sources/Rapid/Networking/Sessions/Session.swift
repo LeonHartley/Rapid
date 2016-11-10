@@ -1,21 +1,40 @@
-import KituraNet
 import Foundation
+import Habbo
+import LoggerAPI
 
 class Session {
-    private var processor: MessageProcessor 
     private var sessionId: UUID
 
-    init(processor: MessageProcessor) {
-        self.sessionId = UUID()
-        self.processor = processor
+    private var messageHandler: MessageHandler?
+    private var client: UnsafeMutablePointer<uv_stream_t>
+
+    init(sessionId: UUID, client: UnsafeMutablePointer<uv_stream_t>) {
+        self.sessionId = sessionId
+        self.client = client
     }
 
-    public func write(_ data: String) {
-        self.processor.write(from: data.data(using: .utf8)! as NSData)
+    public func send(_ composer: MessageComposer) {
+        let buffer = MessageBuffer(hh_buffer_create_empty(1024))
+
+        buffer.initialise()
+
+        buffer.writeShort(composer.getId())
+        composer.compose(buffer)
+
+        hh_write_message(buffer.getBuffer(), self.client)
+        Log.info("Sending message with index \(buffer.getIndex())")
+        Log.info("Sending message with id \(composer.getId())")
     }
 
-    public func getProcessor() -> MessageProcessor {
-        return self.processor
+    public func getMessageHandler() -> MessageHandler {
+        if let messageHandler = self.messageHandler {
+            return messageHandler
+        } else {
+            let handler = MessageHandler(session: self)
+            self.messageHandler = handler
+
+            return handler
+        }
     }
 
     public func getSessionId() -> UUID {

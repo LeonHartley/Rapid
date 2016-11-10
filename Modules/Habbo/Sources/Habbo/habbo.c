@@ -1,5 +1,7 @@
 #include "include/habbo.h"
 
+#include "uv.h"
+
 //
 // Created by Leon on 18/10/2016.
 //
@@ -52,9 +54,9 @@ short hh_buffer_read_short(hh_buffer_t *buffer) {
 
 char *hh_buffer_read_string(hh_buffer_t *buffer) {
     short length = hh_buffer_read_short(buffer);
-    char* string = malloc(length);
+    char* string = malloc(length + 1);
 
-    for(int i = 0; i < length; i++) {
+    for(int i = 0; i < length + 1; i++) {
         string[i] = buffer->base[buffer->index++];
     }
 

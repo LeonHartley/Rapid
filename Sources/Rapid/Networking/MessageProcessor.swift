@@ -1,4 +1,4 @@
-import Foundation
+/*import Foundation
 import KituraNet
 import LoggerAPI
 import Habbo
@@ -55,4 +55,4 @@ class MessageProcessor: IncomingSocketProcessor {
     public func connectionClosed() {
         print("connection closed")
     }
-}
+}*/

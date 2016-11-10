@@ -1,22 +1,6 @@
 rm -rf Packages/Habbo-1.0.0/
-rm -rf Packages/libhh-1.0.0/
-rm -rf Packages/libuv-1.0.0/
 
 cd Modules/Habbo/
-rm -rf .git
-git init
-git add *
-git commit -am ".."
-git tag 1.0.0
-
-cd ../libhh
-rm -rf .git
-git init
-git add *
-git commit -am ".."
-git tag 1.0.0
-
-cd ../libuv
 rm -rf .git
 git init
 git add *

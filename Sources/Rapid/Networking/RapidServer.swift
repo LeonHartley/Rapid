@@ -1,4 +1,4 @@
-import Dispatch
+/*import Dispatch
 import Socket
 import LoggerAPI
 import KituraNet
@@ -64,4 +64,4 @@ class RapidServer {
 
         self.socketManager?.handle(socket: clientSocket!, processor: session.getProcessor())
     }
-}
+}*/

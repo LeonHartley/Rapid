@@ -8,10 +8,6 @@ class MessageBuffer {
         self.buffer = buffer
     }
 
-    deinit {
-        hh_buffer_free(self.buffer)
-    }
-
     public func readString() -> String {
         if let string = hh_buffer_read_string(buffer) {
             defer {
@@ -20,8 +16,12 @@ class MessageBuffer {
 
             return String(cString: string)
         } else {
-            return "";
+            return ""
         }
+    }
+
+    public func writeShort(_ short: Int) {
+        hh_buffer_write_short(Int16(short), buffer)
     }
 
     public func readInt() -> Int {
@@ -44,7 +44,27 @@ class MessageBuffer {
         }
     }
 
+    public func initialise() {
+        hh_buffer_initialise(self.buffer)
+    }
+
     public func reset() {
         hh_buffer_reset(self.buffer)
+    }
+    
+    public func prepare() {
+        hh_buffer_prepare(self.buffer)
+    }
+
+    public func freeBuffer() {
+        hh_buffer_free(self.buffer)
+    }
+
+    public func getIndex() -> Int{
+        return Int(self.buffer.pointee.index)
+    }
+
+    public func getBuffer() -> UnsafeMutablePointer<hh_buffer_t> {
+        return self.buffer
     }
 }
