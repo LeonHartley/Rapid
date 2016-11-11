@@ -2,19 +2,19 @@ import MySQL
 import LoggerAPI
 
 class DataStore {
-    private static let dataStore: DataStore = DataStore()
+    private static var dataStore: DataStore?
 
-    private let connectionPool: ConnectionPool = ConnectionPool(options: DataStoreConfiguration())
+    public static var playerRepository: PlayerRepository?
 
-    init() {
-        DataStore.playerRepository.initialise(self)
+    public func configure() {
+
     }
 
-    func getPool() -> ConnectionPool {
-        return self.connectionPool
+    public static func setInstance(_ dataStore: DataStore) {
+        self.dataStore = dataStore
     }
 
     public static func getInstance() -> DataStore {
-        return dataStore
+        return dataStore!
     }
 }

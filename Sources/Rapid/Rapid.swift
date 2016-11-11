@@ -3,13 +3,13 @@ import Libuv
 class Rapid {
     private var processArguments: [String]
 
-    private var dataStore: DataStore
     private var server: HHServer?
 
     init(processArguments: [String]) {
         self.processArguments = processArguments
 
-        self.dataStore = DataStore()
+        DataStore.setInstance(MySQLDataStore())
+        DataStore.getInstance().configure()
 
         // HHServer is a server implemented in C
         self.server = HHServer(host: "0.0.0.0", port: 3000)
