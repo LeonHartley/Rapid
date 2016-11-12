@@ -2,11 +2,12 @@ import LoggerAPI
 
 class SSOTicketMessageEvent: MessageEvent<SSOTicketMessageParser> {
     override func handle(_ parser: SSOTicketMessageParser) {
-        Log.info("received sso ticket \(parser.authenticationTicket)")
+        Log.debug("received sso ticket \(parser.authenticationTicket)")
 
-        if let player = DataStore.playerRepository?.findPlayer(byTicket: parser.authenticationTicket) {
-            self.session?.send(AuthenticationOKMessageComposer())
-            self.session?.send(MotdNotificationMessageComposer("hiya, \(player.username)! :D"))
+        guard let session = self.session else {
+            return
         }
+
+        self.playerService?.authenticatePlayer(byTicket: parser.authenticationTicket, session)
     }
 }

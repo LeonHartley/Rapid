@@ -21,16 +21,16 @@ class HHServer {
                     let session = Session(sessionId: uuid, client: client!)
                     SessionStore.getInstance().addSession(session)
 
-                    session.getMessageHandler().registerHandshakeEvents()
+                    session.messageHandler().registerHandshakeEvents()
 
-                    Log.info("Registered session with id \(uuid.uuidString)")
+                    Log.debug("Registered session with id \(uuid.uuidString)")
                 }
             }
         }
 
         config.onConnectionClosed = { client in
             if let clientId = hh_client_id(client) {
-                Log.info("Session disconnected with id \(String(cString: clientId))")
+                Log.debug("Session disconnected with id \(String(cString: clientId))")
             }
         }
 
@@ -44,7 +44,7 @@ class HHServer {
                             let messageLength = buffer.readInt()
                             let messageId = buffer.readShort()
 
-                            session.getMessageHandler().handleMessage(id: messageId, buffer: buffer)
+                            session.messageHandler().handleMessage(id: messageId, buffer: buffer)
                         
                             buffer.freeBuffer()
                         }

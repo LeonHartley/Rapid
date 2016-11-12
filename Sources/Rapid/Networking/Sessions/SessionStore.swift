@@ -7,33 +7,43 @@ class SessionStore {
     private var sessions: [UUID: Session] = [:]
 
     public func addSession(_ session: Session) {
-        DispatchQueue.sessionDispatcher.sync { [unowned self] in 
-            self.sessions[session.getSessionId()] = session
+        DispatchQueue.sessionSyncDispatcher.sync { [unowned self] in 
+            self.sessions[session.sessionId()] = session
         }
     }
 
     public func removeSession(_ session: Session) {
-        DispatchQueue.sessionDispatcher.sync { [unowned self] in 
-            self.sessions.removeValue(forKey: session.getSessionId())
+        DispatchQueue.sessionSyncDispatcher.sync { [unowned self] in 
+            self.sessions.removeValue(forKey: session.sessionId())
         }
     }
 
     public func sessionCount() -> Int? {
-        return DispatchQueue.sessionDispatcher.sync { [unowned self] in 
+        return DispatchQueue.sessionSyncDispatcher.sync { [unowned self] in 
             self.sessions.count
         }
     }
 
     public func getSession(_ sessionId: UUID) -> Session? {
-        return DispatchQueue.sessionDispatcher.sync { [unowned self] in 
+        return DispatchQueue.sessionSyncDispatcher.sync { [unowned self] in 
             self.sessions[sessionId]
         }
     }
 
-    public func broadcastAsync() {
-        DispatchQueue.sessionDispatcher.async { [unowned self] in 
-            for (id, session) in self.sessions {
-                // write to the session
+    public func broadcastAsync(_ composer: MessageComposer) {
+        var sessions: [Session] = []
+
+        defer {
+            sessions.removeAll()
+        }
+
+        DispatchQueue.sessionSyncDispatcher.sync { [unowned self] in 
+            sessions.append(contentsOf: Array(self.sessions.values))
+        }
+
+        DispatchQueue.sessionDispatcher.async { [unowned self] in
+            for session in sessions {
+                session.send(composer)
             }
         }
     }

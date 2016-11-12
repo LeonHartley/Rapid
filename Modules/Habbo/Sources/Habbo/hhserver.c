@@ -134,3 +134,7 @@ void hh_start_server(char *ip, int port, hh_server_config_t *configuration) {
 
     uv_loop_close(loop);
 }
+
+void hh_close_session(uv_stream_t *session) {
+    uv_close((uv_handle_t *) session, hh_on_connection_close);
+}

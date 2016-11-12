@@ -1,7 +1,7 @@
 
 import MySQL
 
-struct MySQLPlayer: QueryRowResultType, Player {
+struct MySQLPlayer: QueryRowResultType, Player, QueryParameterDictionaryType {
     var id: Int
     var username: String
     var figure: String
@@ -18,5 +18,15 @@ struct MySQLPlayer: QueryRowResultType, Player {
             credits: r <| "credits",
             gender: r <| "gender"
         )
+    }
+
+    func queryParameter() throws -> QueryDictionary {
+        return QueryDictionary([
+            "username": username,
+            "figure": figure,
+            "motto": motto,
+            "credits": credits,
+            "gender": gender
+        ])
     }
 }

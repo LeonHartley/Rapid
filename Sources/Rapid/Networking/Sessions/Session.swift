@@ -3,13 +3,15 @@ import Habbo
 import LoggerAPI
 
 class Session {
-    private var sessionId: UUID
+    private var sessionIdentifier: UUID
 
-    private var messageHandler: MessageHandler?
+    private var msgHandler: MessageHandler?
     private var client: UnsafeMutablePointer<uv_stream_t>
 
+    public var player: Player?
+
     init(sessionId: UUID, client: UnsafeMutablePointer<uv_stream_t>) {
-        self.sessionId = sessionId
+        self.sessionIdentifier = sessionId
         self.client = client
     }
 
@@ -22,22 +24,25 @@ class Session {
         composer.compose(buffer)
 
         hh_write_message(buffer.getBuffer(), self.client)
-        Log.info("Sending message with index \(buffer.getIndex())")
-        Log.info("Sending message with id \(composer.getId())")
     }
 
-    public func getMessageHandler() -> MessageHandler {
-        if let messageHandler = self.messageHandler {
-            return messageHandler
-        } else {
+    public func close() {
+        // remove the session from any rooms or whatever here.
+        hh_close_session(self.client)
+    }
+
+    public func messageHandler() -> MessageHandler {
+        guard let messageHandler = self.msgHandler else {
             let handler = MessageHandler(session: self)
-            self.messageHandler = handler
+            self.msgHandler = handler
 
             return handler
         }
+        
+        return messageHandler
     }
 
-    public func getSessionId() -> UUID {
-        return self.sessionId
+    public func sessionId() -> UUID {
+        return self.sessionIdentifier
     }
 }

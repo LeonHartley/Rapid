@@ -23,6 +23,8 @@ void hh_start_server(char *ip, int port, hh_server_config_t *configuration);
 
 void hh_write_message(hh_buffer_t* message, uv_stream_t *session);
 
+void hh_close_session(uv_stream_t *session);
+
 char *hh_client_id(uv_stream_t *session);
 
 hh_buffer_t *authentication_ok_composer() {
