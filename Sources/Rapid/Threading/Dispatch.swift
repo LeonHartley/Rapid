@@ -4,6 +4,11 @@ extension DispatchQueue {
     /**
      * This is used to keep message handling away from the libuv loop
      */
+    public static let networkingDispatcher = DispatchQueue(label: "NetworkingDispatcher", attributes: .concurrent)
+
+    /**
+     * This is used to keep message handling away from the libuv loop
+     */
     public static let messageDispatcher = DispatchQueue(label: "MessageDispatcher", attributes: .concurrent)
 
     /**

@@ -1,7 +1,5 @@
 #include "include/habbo.h"
 
-#include "uv.h"
-
 //
 // Created by Leon on 18/10/2016.
 //
@@ -9,6 +7,10 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
+
+void hh_print(char *str) {
+    printf(str);
+}
 
 hh_buffer_t *hh_buffer_create_empty(int length) {
     return hh_buffer_create((char*) malloc(length), length);
@@ -94,4 +96,8 @@ void hh_buffer_write_int_at(int i, hh_buffer_t *buffer, int start) {
 
 void hh_buffer_write_byte(char byte, hh_buffer_t *buffer) {
     buffer->base[buffer->index++] = byte;
+}
+
+void hh_buffer_write_bool(int b, hh_buffer_t *buffer) {
+    buffer->base[buffer->index++] = b == 1 ? (char) 1 : (char) 0;
 }

@@ -16,16 +16,20 @@ void hh_on_connection_close(uv_handle_t *handle) {
     // on connection closed
     config->on_connection_closed((uv_stream_t *) handle);
 
-    // make sure we free the previously malloc'd session id
+    // make sure we free the previously malloc'd session stuff
     free(handle->data);
+    free(handle);
 }
 
 void hh_on_write(uv_write_t* req, int status) {
    free(req->data);
+   free(req);
 }
 
 void hh_close_on_write(uv_write_t *req, int status) {
     uv_close((uv_handle_t *) req->handle, hh_on_connection_close);
+
+    free(req);
 }
 
 void hh_on_read(uv_stream_t *handle, ssize_t nread, const uv_buf_t *buf) {
@@ -75,11 +79,11 @@ void hh_on_new_connection(uv_stream_t *server, int status) {
     if(result == 0) {
         uuid_t *uuid = malloc(sizeof(uuid_t));
     
-        uuid_generate(uuid);
+        uuid_generate((unsigned char *)uuid);
 
         client->data = malloc(37);
 
-        uuid_unparse(uuid, client->data);
+        uuid_unparse((unsigned char *)uuid, client->data);
         
         free(uuid);
 

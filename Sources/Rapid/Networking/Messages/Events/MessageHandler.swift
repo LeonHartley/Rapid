@@ -1,3 +1,4 @@
+import Foundation
 import LoggerAPI
 
 class MessageHandler {
@@ -17,7 +18,16 @@ class MessageHandler {
 
     public func handleMessage(id: Int16, buffer: MessageBuffer) {
         if let event = events[id] {
+
+            let currentTimestamp = Date().timeIntervalSince1970 * 1000
+
             event.process(session: session, buffer: buffer)
+
+            let timeDifference = (Date().timeIntervalSince1970 * 1000) - currentTimestamp
+
+            Log.verbose("Handled message \(String(describing: type(of: event))) in \(timeDifference)ms")
+        } else {
+            Log.verbose("Unhandled message with id #\(id)")
         }
     }
 }

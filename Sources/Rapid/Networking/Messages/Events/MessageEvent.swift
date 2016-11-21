@@ -1,4 +1,5 @@
 import Foundation
+import Dispatch
 
 import LoggerAPI
 
@@ -9,8 +10,10 @@ protocol BufferProcessor {
 class MessageEvent<T: MessageParser>: BufferProcessor {
 
     internal var session: Session?
+    internal var player: Player?
 
     internal var playerService: PlayerService?
+    internal var parser: T?
 
     init() {
         
@@ -21,18 +24,28 @@ class MessageEvent<T: MessageParser>: BufferProcessor {
         self.session = session
         self.playerService = Rapid.playerService
 
-        let parser = T(buffer)
+        if let player = session.player {
+            self.player = player
+        }
 
-        let currentTimestamp = Date().timeIntervalSince1970 * 1000
+        if(self.player == nil && self.requiresPlayer()) {
+            return
+        }
 
-        self.handle(parser)
+        self.parser = T(buffer)
 
-        let timeDifference = (Date().timeIntervalSince1970 * 1000) - currentTimestamp
-        Log.verbose("Handled message \(String(describing: type(of: self))) in \(timeDifference)ms")
+        DispatchQueue.playerDispatcher.async { [unowned self] in
+            self.handle(self.parser!)
 
-        // unset them
-        self.session = nil
-        self.playerService = nil
+            // unset them
+            self.session = nil
+            self.player = nil
+            self.playerService = nil
+        }
+    }
+
+    func requiresPlayer() -> Bool {
+        return true
     }
 
     func handle(_ parser: T) {

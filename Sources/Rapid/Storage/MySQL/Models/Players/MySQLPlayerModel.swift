@@ -1,7 +1,7 @@
 
 import MySQL
 
-struct MySQLPlayer: QueryRowResultType, Player, QueryParameterDictionaryType {
+struct MySQLPlayerModel: QueryRowResultType, PlayerModel, QueryParameterDictionaryType {
     var id: Int
     var username: String
     var figure: String
@@ -9,8 +9,8 @@ struct MySQLPlayer: QueryRowResultType, Player, QueryParameterDictionaryType {
     var credits: Int
     var gender: String
 
-    static func decodeRow(r: QueryRowResult) throws -> MySQLPlayer {
-        return try MySQLPlayer(
+    static func decodeRow(r: QueryRowResult) throws -> MySQLPlayerModel {
+        return try MySQLPlayerModel(
             id: r <| "id",
             username: r <| "username",
             figure: r <| "figure",

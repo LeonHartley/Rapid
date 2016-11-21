@@ -10,6 +10,8 @@ typedef struct {
     char *base;
 } hh_buffer_t;
 
+void hh_print(char *str);
+
 hh_buffer_t *hh_buffer_create_empty(int length);
 
 hh_buffer_t *hh_buffer_create(char* base, int length);
@@ -37,3 +39,5 @@ void hh_buffer_write_int(int i, hh_buffer_t *buffer);
 void hh_buffer_write_int_at(int i, hh_buffer_t *buffer, int start);
 
 void hh_buffer_write_byte(char byte, hh_buffer_t *buffer);
+
+void hh_buffer_write_bool(int b, hh_buffer_t *buffer);

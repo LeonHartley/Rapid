@@ -10,4 +10,8 @@ class SSOTicketMessageEvent: MessageEvent<SSOTicketMessageParser> {
 
         self.playerService?.authenticatePlayer(byTicket: parser.authenticationTicket, session)
     }
+
+    override func requiresPlayer() -> Bool {
+        return false
+    }
 }

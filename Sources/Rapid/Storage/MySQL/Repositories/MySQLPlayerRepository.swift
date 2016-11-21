@@ -3,16 +3,16 @@ import Dispatch
 import LoggerAPI
 
 class MySQLPlayerRepository: MySQLRepository, PlayerRepository {
-    private var playerSaveQueue: [Int: Player] = [:]
+    private var playerSaveQueue: [Int: MySQLPlayerModel] = [:]
 
     public override func initialise() {
         self.registerSaveQueueDispatcher()
     }
 
     private func registerSaveQueueDispatcher() {
-        DispatchQueue.playerSaveDispatcher.asyncAfter(everyInterval: 5) { [unowned self] in
-            self.flushPlayerQueue()
-        }
+        //let _ = DispatchQueue.playerSaveDispatcher.asyncAfter(everyInterval: 5) { [unowned self] in
+        //    self.flushPlayerQueue()
+        //}
     }
 
     private func flushPlayerQueue() {
@@ -30,22 +30,22 @@ class MySQLPlayerRepository: MySQLRepository, PlayerRepository {
         do {
             Log.verbose("Flushing player data to database")
 
-            let status = try dataStore.getPool().transaction { conn in
+            try dataStore.getPool().transaction { conn in
                 for (id, player) in playerSaveQueue {
                     Log.verbose("Saving player \(player.id)")
-                    try conn.query("UPDATE players SET ? WHERE id = ?", [player as! MySQLPlayer, id])
+                    let _ = try conn.query("UPDATE players SET ? WHERE id = ?", [player as MySQLPlayerModel, id])
                 }
             }
 
             Log.verbose("Saved \(queueSize) players from the queue")
         } catch {
-            print("Error saving player queue, error \(error)")
-        }
+            print("Error saving player queue, error \(error)"   )
+        }   
     }
 
-    public func findPlayer(byTicket ticket: String) -> Player? {
+    public func findPlayer(byTicket ticket: String) -> PlayerModel? {
         do {
-            let rows: [MySQLPlayer] = try dataStore.getPool().execute { conn in 
+            let rows: [MySQLPlayerModel] = try dataStore.getPool().execute { conn in 
                 try conn.query("SELECT id, username, figure, motto, credits, gender FROM players WHERE auth_ticket = ?;", [ticket])
             }
 
@@ -60,8 +60,9 @@ class MySQLPlayerRepository: MySQLRepository, PlayerRepository {
     }
 
     public func savePlayer(_ player: Player) {
-        DispatchQueue.playerSaveDispatcher.sync { [unowned self] in
-            self.playerSaveQueue[player.id] = player
+        // create a model object and store it here
+        DispatchQueue.playerSaveDispatcher.sync {
+            //self.playerSaveQueue[player.id] = player
         }
     }
 }

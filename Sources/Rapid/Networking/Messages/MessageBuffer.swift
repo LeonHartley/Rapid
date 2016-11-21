@@ -34,6 +34,11 @@ class MessageBuffer {
         hh_buffer_write_int(Int32(i), buffer)
     }
 
+    public func writeBool(_ b: Bool) {
+        hh_buffer_write_bool(Int32(b ? 1 : 0), buffer)
+    }
+
+
     public func readShort() -> Int16 {
         return hh_buffer_read_short(buffer)
     }

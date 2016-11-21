@@ -1,10 +1,5 @@
 
-enum Gender: String {
-    case male = "M"
-    case female = "F"
-}
-
-protocol Player {
+protocol PlayerModel {
     var id: Int { get }
     var username: String { get set }
     var figure: String { get set }

@@ -10,9 +10,37 @@ class Session {
 
     public var player: Player?
 
+    deinit {
+        if(self.player != nil) {
+            self.player?.onRemove()
+        }
+    }
+
     init(sessionId: UUID, client: UnsafeMutablePointer<uv_stream_t>) {
         self.sessionIdentifier = sessionId
         self.client = client
+    }
+
+    public func addPlayer(_ player: Player) {
+        self.player = player
+    }
+
+    public func removePlayer() {
+        guard let player = self.player else {
+            return
+        }
+
+        player.onRemove()
+        Rapid.playerService.removePlayer(player)
+
+        self.player = nil
+    }
+
+    public func close() {
+        // remove the session from any rooms or whatever here.
+        self.removePlayer()
+
+        hh_close_session(self.client)
     }
 
     public func send(_ composer: MessageComposer) {
@@ -23,12 +51,9 @@ class Session {
         buffer.writeShort(composer.getId())
         composer.compose(buffer)
 
-        hh_write_message(buffer.getBuffer(), self.client)
-    }
+        Log.verbose("Composed message \(String(describing: type(of: composer)))")
 
-    public func close() {
-        // remove the session from any rooms or whatever here.
-        hh_close_session(self.client)
+        hh_write_message(buffer.getBuffer(), self.client)
     }
 
     public func messageHandler() -> MessageHandler {

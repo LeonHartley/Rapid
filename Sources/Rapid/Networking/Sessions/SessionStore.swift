@@ -1,20 +1,38 @@
 import Foundation
 import Dispatch
 
-class SessionStore {
-    private static let sessionStore: SessionStore = SessionStore()
+extension Rapid {
+    public static let sessionStore: SessionStore = SessionStore()
+}
 
+class SessionStore {
     private var sessions: [UUID: Session] = [:]
 
+    private func disposeSession(_ session: Session) {
+        session.removePlayer()
+    }
+
     public func addSession(_ session: Session) {
-        DispatchQueue.sessionSyncDispatcher.sync { [unowned self] in 
+        let _ = DispatchQueue.sessionSyncDispatcher.sync { [unowned self] in 
             self.sessions[session.sessionId()] = session
         }
     }
 
-    public func removeSession(_ session: Session) {
-        DispatchQueue.sessionSyncDispatcher.sync { [unowned self] in 
+    public func removeSession(forSession session: Session) {
+        self.disposeSession(session)
+
+        let _ = DispatchQueue.sessionSyncDispatcher.sync { [unowned self] in 
             self.sessions.removeValue(forKey: session.sessionId())
+        }
+    }
+
+    public func removeSession(forId id: UUID) {
+        if let session = self.getSession(id) { 
+            self.disposeSession(session)
+        }
+
+        let _ = DispatchQueue.sessionSyncDispatcher.sync { [unowned self] in 
+            self.sessions.removeValue(forKey: id)
         }
     }
 
@@ -37,18 +55,14 @@ class SessionStore {
             sessions.removeAll()
         }
 
-        DispatchQueue.sessionSyncDispatcher.sync { [unowned self] in 
+        let _ = DispatchQueue.sessionSyncDispatcher.sync { [unowned self] in 
             sessions.append(contentsOf: Array(self.sessions.values))
         }
 
-        DispatchQueue.sessionDispatcher.async { [unowned self] in
+        let _ = DispatchQueue.sessionDispatcher.async {
             for session in sessions {
                 session.send(composer)
             }
         }
-    }
-
-    public static func getInstance() -> SessionStore {
-        return sessionStore
     }
 }
