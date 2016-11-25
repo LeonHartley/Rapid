@@ -12,7 +12,7 @@ class Rapid {
         Log.info("  @author Leon")
         Log.info("Initialising core components")
 
-        DataStore.setInstance(MySQLDataStore())
+        DataStore.setInstance(RedbirdDataStore())
         DataStore.getInstance().configure()
     }
 
