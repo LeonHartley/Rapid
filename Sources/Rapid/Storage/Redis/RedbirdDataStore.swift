@@ -12,17 +12,17 @@ class RedbirdDataStore: DataStore {
     override func configure() {
         let connectionPoolSize = 4
 
-        for index in 1...connectionPoolSize {
-            Log.info("Starting redbird datastore")
+        Log.info("Starting redbird datastore")
 
-            // TODO: Create a sort of watchdog that makes sure we dont have too many connections in the pool
-            //       at a time.
+        for connectionId in 1...connectionPoolSize {
+            Log.info("Starting redbird connection #\(connectionId)")
 
             if let connection = self.createConnection() {
                 self.returnConnection(connection)
             }
-        
         }
+
+        DataStore.playerRepository = RedbirdPlayerRepository(self)
     }
 
     private func createConnection() -> Redbird? {
@@ -35,6 +35,18 @@ class RedbirdDataStore: DataStore {
         }
 
         return connection
+    }
+
+    public func createTransaction() -> RedbirdTransaction? {
+        guard let connection = self.getConnection() else {
+            return nil
+        }
+
+        return RedbirdTransaction(connection)
+    }
+
+    public func closeTransaction(_ transaction: RedbirdTransaction) {
+        self.returnConnection(transaction.client())
     }
 
     public func getConnection() -> Redbird? {

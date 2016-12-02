@@ -18,7 +18,6 @@ class MessageHandler {
 
     public func handleMessage(id: Int16, buffer: MessageBuffer) {
         if let event = events[id] {
-
             let currentTimestamp = Date().timeIntervalSince1970 * 1000
 
             event.process(session: session, buffer: buffer)
