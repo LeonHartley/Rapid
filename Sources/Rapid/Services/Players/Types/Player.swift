@@ -1,7 +1,7 @@
 import LoggerAPI
 
 class Player {
-    
+
     private var session: Session
 
     private var playerId: Int
@@ -9,7 +9,7 @@ class Player {
 
     public init(session: Session, playerData: PlayerData) {
         self.session = session
-        
+
         self.playerId = playerData.id
         self.data = playerData
 
@@ -20,7 +20,7 @@ class Player {
         Log.info("Player \(self.data.username) logged out")
     }
 
-    public func getSession() -> Session {  
+    public func getSession() -> Session {
         return self.session
     }
 
@@ -30,5 +30,5 @@ class Player {
 
     public func getData() -> PlayerData {
         return self.data
-    } 
+    }
 }

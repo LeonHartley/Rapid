@@ -1,6 +1,6 @@
 
 protocol PlayerRepository {
-    func findPlayer(byTicket ticket: String) -> PlayerModel?
+    func findPlayer(byTicket ticket: String) -> PlayerData?
 
-    func savePlayer(_ player: Player)
+    func savePlayer(_ player: PlayerData)
 }

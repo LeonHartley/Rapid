@@ -8,10 +8,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-void hh_print(char *str) {
-    printf(str);
-}
-
 hh_buffer_t *hh_buffer_create_empty(int length) {
     return hh_buffer_create((char*) malloc(length), length);
 }
@@ -45,7 +41,7 @@ void hh_buffer_free(hh_buffer_t *buffer) {
 int hh_buffer_read_int(hh_buffer_t *buffer) {
     return (0xff & buffer->base[buffer->index++] << 24) |
         (0xff & buffer->base[buffer->index++] << 16) |
-        (0xff & buffer->base[buffer->index++] << 8) | 
+        (0xff & buffer->base[buffer->index++] << 8) |
        (0xff & buffer->base[buffer->index++]);
 }
 
@@ -69,7 +65,7 @@ void hh_buffer_write_string(char* string, hh_buffer_t *buffer) {
     size_t length = strlen(string);
 
     hh_buffer_write_short(length, buffer);
-    
+
     for(int i = 0; i < length; i++) {
         hh_buffer_write_byte(string[i], buffer);
     }

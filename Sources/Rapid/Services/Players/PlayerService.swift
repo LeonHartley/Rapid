@@ -10,14 +10,14 @@ extension Rapid {
 class PlayerService {
     private var playerIdToSessionId: [Int: UUID] = [:]
     private var playerUsernameToPlayerId: [String: Int] = [:]
-    
+
     public func authenticatePlayer(byTicket ticket: String, _ session: Session) {
         DispatchQueue.playerDispatcher.async { [unowned self] in
-            if let playerModel = DataStore.playerRepository?.findPlayer(byTicket: ticket) {
+            if let playerData = DataStore.playerRepository?.findPlayer(byTicket: ticket) {
                 // todo: allow the ability to send a list of messages and use 1 single buffer
 
                 // register the message handlers before we send anything else.
-                session.messageHandler().registerPlayerEvents()
+                session.messageHandler().registerEvents()
 
                 session.send(AuthenticationOKMessageComposer())
                 session.send(AvailabilityStatusMessageComposer())
@@ -26,18 +26,14 @@ class PlayerService {
                 session.send(ClientSettingsMessageComposer())
                 session.send(HomeRoomMessageComposer(roomId: 0))
 
-                session.send(MotdNotificationMessageComposer("hiya, \(playerModel.username)! :D"))
-
-                let playerData = PlayerData(
-                    id: playerModel.id, 
-                    username: playerModel.username,
-                    figure: playerModel.figure,
-                    motto: playerModel.motto,
-                    credits: playerModel.credits,
-                    gender: playerModel.gender.lowercased() == "m" ? .male : .female)
+                session.send(MotdNotificationMessageComposer("hiya, \(playerData.username)! :D"))
 
                 let player = Player(session: session, playerData: playerData)
-                
+
+               // player.getData().setUsername("Lalalala")
+
+                DataStore.playerRepository?.savePlayer(playerData)
+
                 //cache player stuff.
                 self.addPlayer(player)
                 session.addPlayer(player)
@@ -48,14 +44,14 @@ class PlayerService {
     }
 
     public func addPlayer(_ player: Player) {
-        DispatchQueue.playerSyncDispatcher.sync { [unowned self] in 
+        DispatchQueue.playerSyncDispatcher.sync { [unowned self] in
             self.playerIdToSessionId[player.getData().id] = player.getSession().sessionId()
             self.playerUsernameToPlayerId[player.getData().username] = player.getData().id
         }
     }
 
     public func removePlayer(_ player: Player) {
-        DispatchQueue.playerSyncDispatcher.sync { [unowned self] in 
+        DispatchQueue.playerSyncDispatcher.sync { [unowned self] in
             self.playerIdToSessionId.removeValue(forKey: player.getData().id)
             self.playerUsernameToPlayerId.removeValue(forKey: player.getData().username)
         }
@@ -64,7 +60,7 @@ class PlayerService {
     public func playerCount() -> Int {
         var count = 0
 
-        DispatchQueue.playerSyncDispatcher.sync { [unowned self] in 
+        DispatchQueue.playerSyncDispatcher.sync { [unowned self] in
             count = self.playerIdToSessionId.count
         }
 

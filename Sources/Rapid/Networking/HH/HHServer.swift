@@ -22,8 +22,6 @@ class HHServer {
                         let session = Session(sessionId: uuid, client: client!)
                         Rapid.sessionStore.addSession(session)
 
-                        session.messageHandler().registerHandshakeEvents()
-
                         Log.debug("Registered session with id \(uuid.uuidString)")
                     }
                 }
@@ -53,13 +51,13 @@ class HHServer {
                             let messageId = buffer.readShort()
 
                             session.messageHandler().handleMessage(id: messageId, buffer: buffer)
-                        
+
                             buffer.freeBuffer()
                         }
                     }
                 }
             }
-        
+
           host.withCString { hostStr in
               hh_start_server(UnsafeMutablePointer(mutating: hostStr), Int32(port), config.configPointer)
           }

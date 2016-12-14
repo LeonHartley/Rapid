@@ -26,7 +26,7 @@ class RedbirdTransaction {
                     lastKey = nil
                 }
             }
-        
+
         } catch {
             Log.error("Failed to fetch object by key \(key), \(error)")
         }
@@ -35,8 +35,6 @@ class RedbirdTransaction {
     }
 
     public func string(fromMap map: String, key: String) -> String? {
-        var data: String?
-
         do {
             let response = try self.redbirdClient.command("HGET", params: [map, key]).toString()
 
@@ -46,6 +44,23 @@ class RedbirdTransaction {
         }
 
         return nil
+    }
+
+    public func storeObject(key: String, object: [String: String]) {
+        var params: [String] = [key]
+
+        for (key, value) in object {
+            params.append(key)
+            params.append("\"\(value)\"")
+        }
+
+        do {
+            let response = try self.redbirdClient.command("HMSET", params: params)
+
+            print(try response.toString())
+        } catch {
+            Log.error("Failed to set object for key \(key), error \(error)")
+        }
     }
 
     public func client() -> Redbird {

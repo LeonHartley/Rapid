@@ -5,14 +5,15 @@ import LoggerAPI
 class RedbirdPlayerRepository: RedbirdRepository, PlayerRepository {
 
     public override func initialise() {
+
     }
-    
-    public func findPlayer(byTicket ticket: String) -> PlayerModel? {
+
+    public func findPlayer(byTicket ticket: String) -> PlayerData? {
         if let transaction = self.dataStore.createTransaction() {
             defer {
                 self.dataStore.closeTransaction(transaction)
             }
-            
+
             guard let playerId = transaction.string(fromMap: "rapid.authTickets", key: ticket) else {
                 return nil
             }
@@ -21,22 +22,38 @@ class RedbirdPlayerRepository: RedbirdRepository, PlayerRepository {
                 return nil
             }
 
-            let playerModel = RedbirdPlayerModel(
+            let playerData = PlayerData(
                 id: Int(playerId)!,
                 username: playerObject["username"]!,
                 figure: playerObject["figure"]!,
                 motto: playerObject["motto"]!,
                 credits: Int(playerObject["credits"]!)!,
-                gender: playerObject["gender"]!
+                gender: playerObject["gender"]!.lowercased() == "m" ? .male : .female
             )
 
-            return playerModel
+            return playerData
         }
 
         return nil
     }
 
-    public func savePlayer(_ player: Player) {
+    public func savePlayer(_ playerData: PlayerData) {
+        if let transaction = self.dataStore.createTransaction() {
+            defer {
+                self.dataStore.closeTransaction(transaction)
+            }
 
+            let playerObject = [
+                "username": playerData.username,
+                "figure": playerData.figure,
+                "motto": playerData.motto,
+                "credits": "\(playerData.credits)",
+                "gender": playerData.gender == .male ? "m" : "f"
+            ]
+
+            transaction.storeObject(
+                key: "rapid.players:\(playerData.id)",
+                object: playerObject)
+        }
     }
 }

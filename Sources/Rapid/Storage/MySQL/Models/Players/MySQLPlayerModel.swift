@@ -1,7 +1,7 @@
 
 import MySQL
 
-struct MySQLPlayerModel: QueryRowResultType, PlayerModel, QueryParameterDictionaryType {
+struct MySQLPlayerModel: QueryRowResultType, QueryParameterDictionaryType {
     var id: Int
     var username: String
     var figure: String

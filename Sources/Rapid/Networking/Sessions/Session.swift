@@ -1,6 +1,7 @@
 import Foundation
 import Habbo
 import LoggerAPI
+import Dispatch
 
 class Session {
     private var sessionIdentifier: UUID
