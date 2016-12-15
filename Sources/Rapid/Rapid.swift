@@ -3,7 +3,7 @@ import LoggerAPI
 class Rapid {
     private var processArguments: [String]
 
-    private var server: HHServer?
+    private var server: HHServer = HHServer()
 
     init(processArguments: [String]) {
         self.processArguments = processArguments
@@ -17,8 +17,9 @@ class Rapid {
     }
 
     internal func start() {
-        // HHServer is a server implemented in C
-        self.server = HHServer(host: "0.0.0.0", port: 3000)
+        // 2 networking workers. todo: make this configurable
+        self.server.initialise(host: "0.0.0.0", port: 3000)
+        self.server.initialise(host: "0.0.0.0", port: 3000)
     }
 
     internal func getProcessArguments() -> [String] {

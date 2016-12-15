@@ -11,6 +11,8 @@ class Session {
 
     public var player: Player?
 
+    private var eventDispatcher: DispatchQueue
+
     deinit {
         if(self.player != nil) {
             self.player?.onRemove()
@@ -20,6 +22,7 @@ class Session {
     init(sessionId: UUID, client: UnsafeMutablePointer<uv_stream_t>) {
         self.sessionIdentifier = sessionId
         self.client = client
+        self.eventDispatcher = DispatchQueue(label: "SessionDispatcher-\(sessionId)")
     }
 
     public func addPlayer(_ player: Player) {
@@ -32,6 +35,7 @@ class Session {
         }
 
         player.onRemove()
+
         Rapid.playerService.removePlayer(player)
 
         self.player = nil
@@ -70,5 +74,9 @@ class Session {
 
     public func sessionId() -> UUID {
         return self.sessionIdentifier
+    }
+
+    public func eventQueue() -> DispatchQueue {
+        return self.eventDispatcher
     }
 }

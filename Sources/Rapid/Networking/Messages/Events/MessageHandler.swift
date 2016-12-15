@@ -12,6 +12,7 @@ class MessageHandler {
 
         self.registerMessage(id: Events.SSOTicketMessageEvent, SSOTicketMessageEvent())
         self.registerMessage(id: Events.CheckReleaseMessageEvent, CheckReleaseMessageEvent())
+        self.registerMessage(id: Events.PlayerDataMessageEvent, PlayerDataMessageEvent())
     }
 
     public func registerMessage(id: Int, _ event: BufferProcessor) {
@@ -23,18 +24,11 @@ class MessageHandler {
     }
 
     public func registerEvents() {
-        self.registerMessage(id: Events.PlayerDataMessageEvent, PlayerDataMessageEvent())
     }
 
     public func handleMessage(id: Int16, buffer: MessageBuffer) {
         if let event = findEvent(forId: id) {
-            let currentTimestamp = Date().timeIntervalSince1970 * 1000
-
             event.process(session: session, buffer: buffer)
-
-            let timeDifference = (Date().timeIntervalSince1970 * 1000) - currentTimestamp
-
-            Log.verbose("Handled message \(String(describing: type(of: event))) in \(timeDifference)ms")
         } else {
             Log.verbose("Unhandled message with id #\(id)")
         }

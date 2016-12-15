@@ -12,34 +12,29 @@ class PlayerService {
     private var playerUsernameToPlayerId: [String: Int] = [:]
 
     public func authenticatePlayer(byTicket ticket: String, _ session: Session) {
-        DispatchQueue.playerDispatcher.async { [unowned self] in
-            if let playerData = DataStore.playerRepository?.findPlayer(byTicket: ticket) {
-                // todo: allow the ability to send a list of messages and use 1 single buffer
+        if let playerData = DataStore.playerRepository?.findPlayer(byTicket: ticket) {
 
-                // register the message handlers before we send anything else.
-                session.messageHandler().registerEvents()
+            session.send(AuthenticationOKMessageComposer())
+            session.send(AvailabilityStatusMessageComposer())
+            session.send(FavouriteRoomsMessageComposer())
+            session.send(FuserightsMessageComposer(forRank: 7))
+            session.send(ClientSettingsMessageComposer())
+            session.send(HomeRoomMessageComposer(roomId: 0))
 
-                session.send(AuthenticationOKMessageComposer())
-                session.send(AvailabilityStatusMessageComposer())
-                session.send(FavouriteRoomsMessageComposer())
-                session.send(FuserightsMessageComposer(forRank: 7))
-                session.send(ClientSettingsMessageComposer())
-                session.send(HomeRoomMessageComposer(roomId: 0))
+            session.send(MotdNotificationMessageComposer("hiya, \(playerData.username)! :D"))
 
-                session.send(MotdNotificationMessageComposer("hiya, \(playerData.username)! :D"))
+            // todo: allow the ability to send a list of messages and use 1 single buffer
+            let player = Player(session: session, playerData: playerData)
 
-                let player = Player(session: session, playerData: playerData)
+            player.getData().setUsername("topkek")
 
-               // player.getData().setUsername("Lalalala")
+            DataStore.playerRepository?.savePlayer(playerData)
 
-                DataStore.playerRepository?.savePlayer(playerData)
-
-                //cache player stuff.
-                self.addPlayer(player)
-                session.addPlayer(player)
-            } else {
-                session.close()
-            }
+            //cache player stuff.
+            self.addPlayer(player)
+            session.addPlayer(player)
+        } else {
+            session.close()
         }
     }
 

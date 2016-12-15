@@ -19,7 +19,15 @@ hh_server_config_t *config = NULL;
 
 hh_server_config_t *hh_server_config();
 
-void hh_start_server(char *ip, int port, hh_server_config_t *configuration);
+int hh_config_initialised() {
+    return config != NULL;
+}
+
+void hh_initialise_config(hh_server_config_t *configuration) {
+    config = configuration;
+}
+
+void hh_start_server(char *ip, int port);
 
 void hh_write_message(hh_buffer_t* message, uv_stream_t *session);
 

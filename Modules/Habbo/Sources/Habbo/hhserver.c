@@ -72,7 +72,7 @@ void hh_on_read(uv_stream_t *handle, ssize_t nread, const uv_buf_t *buf) {
 void hh_on_new_connection(uv_stream_t *server, int status) {
     uv_tcp_t *client = (uv_tcp_t *) malloc(sizeof(uv_tcp_t));
 
-    uv_tcp_init(uv_default_loop(), client);
+    uv_tcp_init(server->loop, client);
 
     int result = uv_accept(server, (uv_stream_t *) client);
 
@@ -117,23 +117,31 @@ void hh_write_message(hh_buffer_t* message, uv_stream_t *session) {
     uv_write(req, session, &buffer, 1, hh_on_write);
 }
 
-void hh_start_server(char *ip, int port, hh_server_config_t *configuration) {
-    config = configuration;
 
-    uv_loop_t *loop = uv_default_loop();
+void hh_start_server(char *ip, int port) {
+    uv_loop_t *loop = (uv_loop_t *) malloc(sizeof(uv_loop_t));
+    uv_loop_init(loop);
 
     uv_tcp_t server;
     struct sockaddr_in bind_addr;
 
-    uv_tcp_init(loop, &server);
+    uv_tcp_init_ex(loop, &server, AF_INET);
+    uv_os_fd_t fd;
+    int on = 1;
+    uv_fileno(&server, &fd);
+    setsockopt(fd, SOL_SOCKET, SO_REUSEPORT, &on, sizeof(on));
+
     uv_ip4_addr(ip, port, &bind_addr);
     uv_tcp_bind(&server, (const struct sockaddr *) &bind_addr, 0);
+    
+    //uv_tcp_nodelay(&server, 1);
     uv_listen((uv_stream_t *) &server, 128, hh_on_new_connection);
 
     int result = uv_run(loop, UV_RUN_DEFAULT);
 
     if(result) {
         // display errors to user.
+        printf("result: %i", result);
     }
 
     uv_loop_close(loop);

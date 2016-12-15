@@ -34,8 +34,14 @@ class MessageEvent<T: MessageParser>: BufferProcessor {
 
         self.parser = T(buffer)
 
-        DispatchQueue.playerDispatcher.async { [unowned self] in
+        let currentTimestamp = Date().timeIntervalSince1970 * 1000
+
+        session.eventQueue().async { [unowned self] in
             self.handle(self.parser!)
+
+            let timeDifference = (Date().timeIntervalSince1970 * 1000) - currentTimestamp
+
+            Log.verbose("Handled message \(String(describing: type(of: self))) in \(timeDifference)ms")
 
             // unset them
             self.session = nil

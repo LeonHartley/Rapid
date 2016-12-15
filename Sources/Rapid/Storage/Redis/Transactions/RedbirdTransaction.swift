@@ -19,14 +19,14 @@ class RedbirdTransaction {
             for entry in response {
                 let data = try entry.toString()
 
-                if lastKey == nil {
-                    lastKey = data
-                } else {
-                    obj[lastKey!] = data
+                if let key = lastKey {
+                    obj[key] = data
+
                     lastKey = nil
+                } else {
+                    lastKey = data
                 }
             }
-
         } catch {
             Log.error("Failed to fetch object by key \(key), \(error)")
         }
@@ -36,9 +36,9 @@ class RedbirdTransaction {
 
     public func string(fromMap map: String, key: String) -> String? {
         do {
-            let response = try self.redbirdClient.command("HGET", params: [map, key]).toString()
+            let response = try self.redbirdClient.command("HGET", params: [map, key])
 
-            return response
+            return try response.toMaybeString()
         } catch {
             Log.error("Failed to fetch string from map: \(map) by key: \(key), \(error)")
         }
@@ -51,7 +51,7 @@ class RedbirdTransaction {
 
         for (key, value) in object {
             params.append(key)
-            params.append("\"\(value)\"")
+            params.append(value)
         }
 
         do {
