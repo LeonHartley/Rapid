@@ -1,9 +1,11 @@
 import LoggerAPI
+import Foundation
 
 class Rapid {
     private var processArguments: [String]
 
     private var server: HHServer = HHServer()
+    private var config: Configuration
 
     init(processArguments: [String]) {
         self.processArguments = processArguments
@@ -12,14 +14,23 @@ class Rapid {
         Log.info("  @author Leon")
         Log.info("Initialising core components")
 
+        self.config = Configuration("./rapid.json")
+
+        Configuration.setConfig(self.config)
+
         DataStore.setInstance(RedbirdDataStore())
         DataStore.getInstance().configure()
     }
 
     internal func start() {
-        // 2 networking workers. todo: make this configurable
-        self.server.initialise(host: "0.0.0.0", port: 3000)
-        self.server.initialise(host: "0.0.0.0", port: 3000)
+        let host = self.config["server"].getString(forKey: "host")
+        let port = self.config["server"].getInt(forKey: "port")
+        let workers = self.config["server"].getInt(forKey: "workers")
+
+        for _ in 1...workers {
+            Log.info("Starting networking server on tcp://\(host):\(port)");
+            self.server.initialise(host: host, port: port)   
+        }
     }
 
     internal func getProcessArguments() -> [String] {

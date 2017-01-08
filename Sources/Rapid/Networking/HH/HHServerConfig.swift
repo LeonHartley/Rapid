@@ -1,4 +1,3 @@
-import CUV
 import Habbo 
 
 class HHServerConfig {

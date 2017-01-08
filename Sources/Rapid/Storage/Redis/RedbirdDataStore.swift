@@ -5,12 +5,21 @@ import LoggerAPI
 class RedbirdDataStore: DataStore {
 
     private let syncDispatcher = DispatchQueue(label: "RedbirdDataStoreSyncDispatcher")
-    private let redisConfiguration = RedbirdConfig(address: "127.0.0.1", port: 6379)
+    private var redisConfiguration: RedbirdConfig
 
     private var redbirdInstances: [Redbird] = []
 
+    public override init() {
+        let config = Configuration.getConfig()
+
+        let host = config["datastore"]["redis"].getString(forKey: "host")
+        let port = config["datastore"]["redis"].getInt(forKey: "port")
+
+        self.redisConfiguration = RedbirdConfig(address: host, port: UInt16(port))
+    }
+
     override func configure() {
-        let connectionPoolSize = 4
+        let connectionPoolSize = Configuration.getConfig()["datastore"]["redis"].getInt(forKey: "connectionPool")
 
         Log.info("Starting redbird datastore")
 
