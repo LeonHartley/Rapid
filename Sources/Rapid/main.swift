@@ -10,9 +10,11 @@ helium.format = "[(%date)] [(%type)] [(%file)] - (%msg)"
 
 Log.logger = helium
 
-let application = Rapid(processArguments: CommandLine.arguments)
+Rapid.currentInstance.start()
 
-application.start()
+if let roomModel = Rapid.roomModelService.findModel(byName: "model_a") {
+    Log.info("Loaded room model with name model_a")
+}
 
 while(true) {
     if let line = readLine(strippingNewline: true) {

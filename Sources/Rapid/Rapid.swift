@@ -2,6 +2,8 @@ import LoggerAPI
 import Foundation
 
 class Rapid {
+    private(set) public static var currentInstance: Rapid = Rapid(processArguments: CommandLine.arguments)
+
     private var processArguments: [String]
 
     private var server: HHServer = HHServer()
@@ -18,7 +20,14 @@ class Rapid {
 
         Configuration.setConfig(self.config)
 
-        DataStore.setInstance(RedbirdDataStore())
+        let dataStoreType = self.config["datastore"].getString(forKey: "type")
+
+        if(dataStoreType == "redis") {
+            DataStore.setInstance(RedbirdDataStore())
+        } else if(dataStoreType == "mysql") {
+            DataStore.setInstance(MySQLDataStore())
+        }
+        
         DataStore.getInstance().configure()
     }
 
@@ -31,6 +40,8 @@ class Rapid {
             Log.info("Starting networking server on tcp://\(host):\(port)");
             self.server.initialise(host: host, port: port)   
         }
+
+        Rapid.currentInstance = self
     }
 
     internal func getProcessArguments() -> [String] {

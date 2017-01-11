@@ -32,6 +32,7 @@ class RedbirdDataStore: DataStore {
         }
 
         DataStore.playerRepository = RedbirdPlayerRepository(self)
+        DataStore.roomModelRepository = RedbirdRoomModelRepository(self)
     }
 
     private func createConnection() -> Redbird? {

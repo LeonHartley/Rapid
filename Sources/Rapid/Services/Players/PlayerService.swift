@@ -26,8 +26,6 @@ class PlayerService {
             // todo: allow the ability to send a list of messages and use 1 single buffer
             let player = Player(session: session, playerData: playerData)
 
-            player.getData().setUsername("topkek")
-
             DataStore.playerRepository?.savePlayer(playerData)
 
             //cache player stuff.

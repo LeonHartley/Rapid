@@ -5,6 +5,7 @@ class DataStore {
     private static var dataStore: DataStore?
 
     public static var playerRepository: PlayerRepository?
+    public static var roomModelRepository: RoomModelRepository?
 
     public func configure() {
 
