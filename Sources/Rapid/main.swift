@@ -12,9 +12,7 @@ Log.logger = helium
 
 Rapid.currentInstance.start()
 
-if let roomModel = Rapid.roomModelService.findModel(byName: "model_a") {
-    Log.info("Loaded room model with name model_a")
-}
+Rapid.roomService.loadRoom(byId: 1)
 
 while(true) {
     if let line = readLine(strippingNewline: true) {

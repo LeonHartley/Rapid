@@ -7,6 +7,15 @@ git add *
 git commit -am ".."
 git tag 1.0.0
 
+rm -rf Packages/Libuv-1.0.0/
+
+cd Modules/Libuv/
+rm -rf .git
+git init
+git add *
+git commit -am ".."
+git tag 1.0.0
+
 cd ../../
 
 swift build -Xlinker -L/usr/local/lib -Xcc -I/usr/local/include -Xcc -I/usr/local/include/mysql -Xcc -I/usr/local/Cellar/libuv/HEAD/include

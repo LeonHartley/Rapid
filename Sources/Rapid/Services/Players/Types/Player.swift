@@ -1,6 +1,6 @@
 import LoggerAPI
 
-class Player {
+public class Player {
 
     private var session: Session
 

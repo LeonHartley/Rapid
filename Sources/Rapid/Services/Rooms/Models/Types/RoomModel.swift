@@ -20,21 +20,16 @@ public class RoomModel {
             let rowData = rows[i].characters
 
             for char in rowData {
-                var tileHeight: Double = 0.0
-                
                 if(char == "x") {
                     self.roomMap[i].append(RoomModelTileState.closed)
-                } else if(char == "0") {
-                    self.roomMap[i].append(RoomModelTileState.open)
                 } else {
-                    // parse height
+                    self.roomMap[i].append(RoomModelTileState.open)
                 }
-            }
-        }
-
-        for row in roomMap {
-            for tile in row {
-                print(tile)
+                
+                // default height is is 0, parse the char to an integer to figure out
+                // the tile's actual height. (if it's not 0)
+                var tileHeight: Double = 0.0
+                
             }
         }
     }

@@ -48,4 +48,18 @@ extension DispatchQueue {
                 }
             }
        }
+
+       /*
+        * Creates a timer that can be stopped. 
+        */
+       public func createTimer(everyInterval interval: DispatchTimeInterval, block: @escaping () -> Void) -> DispatchSourceTimer {
+            let timer = DispatchSource.makeTimerSource(queue: self)
+
+            timer.scheduleRepeating(deadline: .now(), interval: interval)
+            timer.setEventHandler {
+                block()
+            }
+
+            return timer
+       }
 }

@@ -3,7 +3,7 @@ import Habbo
 import LoggerAPI
 import Dispatch
 
-class Session {
+public class Session {
     private var sessionIdentifier: UUID
 
     private var msgHandler: MessageHandler?

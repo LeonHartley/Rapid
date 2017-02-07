@@ -2,7 +2,7 @@ import Foundation
 import LoggerAPI
 import Dispatch
 
-class MessageHandler {
+public class MessageHandler {
     private var events: [Int16: BufferProcessor] = [:]
 
     private var session: Session
@@ -24,6 +24,7 @@ class MessageHandler {
     }
 
     public func registerEvents() {
+        
     }
 
     public func handleMessage(id: Int16, buffer: MessageBuffer) {

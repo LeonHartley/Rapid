@@ -1,10 +1,10 @@
 
-enum Gender: String {
+public enum Gender: String {
     case male = "M"
     case female = "F"
 }
 
-class PlayerData {
+public class PlayerData {
     private(set) public var id: Int
     private(set) public var username: String
     private(set) public var figure: String

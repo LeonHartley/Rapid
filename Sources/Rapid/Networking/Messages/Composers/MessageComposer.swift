@@ -1,6 +1,6 @@
 import Foundation
 
-protocol MessageComposer {
+public protocol MessageComposer {
     func compose(_ buffer: MessageBuffer)
 
     func getId() -> Int

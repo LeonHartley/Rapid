@@ -1,12 +1,11 @@
-
 import LoggerAPI
 
-protocol MessageParserProtocol {
+public protocol MessageParserProtocol {
     init(_ buffer: MessageBuffer) 
 }
 
-class MessageParser: MessageParserProtocol {
-    required init(_ buffer: MessageBuffer) {
+public class MessageParser: MessageParserProtocol {
+    public required init(_ buffer: MessageBuffer) {
         
     }
 }

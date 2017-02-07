@@ -3,11 +3,11 @@ import Dispatch
 
 import LoggerAPI
 
-protocol BufferProcessor {
+public protocol BufferProcessor {
     func process(session: Session, buffer: MessageBuffer)
 }
 
-class MessageEvent<T: MessageParser>: BufferProcessor {
+public class MessageEvent<T: MessageParser>: BufferProcessor {
 
     internal var session: Session?
     internal var player: Player?
@@ -19,7 +19,7 @@ class MessageEvent<T: MessageParser>: BufferProcessor {
         
     }
 
-    func process(session: Session, buffer: MessageBuffer) {
+    public func process(session: Session, buffer: MessageBuffer) {
         // set message-scope variables
         self.session = session
         self.playerService = Rapid.playerService

@@ -36,5 +36,4 @@ public class RoomModelService {
             self.roomModels[key] = model
         }
     }
-
 }

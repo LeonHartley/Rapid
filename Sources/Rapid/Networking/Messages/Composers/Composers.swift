@@ -1,4 +1,4 @@
-class Composers {
+public class Composers {
     public static let AuthenticationOKMessageComposer = 3536
     public static let MotdNotificationMessageComposer = 1141
     public static let FavouriteRoomsMessageComposer = 3505

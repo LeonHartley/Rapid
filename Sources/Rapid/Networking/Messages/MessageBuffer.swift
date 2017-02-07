@@ -1,7 +1,7 @@
 import Foundation
 import Habbo
 
-class MessageBuffer {
+public class MessageBuffer {
     private var buffer: UnsafeMutablePointer<hh_buffer_t>
 
     init(_ buffer: UnsafeMutablePointer<hh_buffer_t>) {

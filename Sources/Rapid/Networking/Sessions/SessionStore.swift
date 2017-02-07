@@ -5,7 +5,7 @@ extension Rapid {
     public static let sessionStore: SessionStore = SessionStore()
 }
 
-class SessionStore {
+public class SessionStore {
     private var sessions: [UUID: Session] = [:]
 
     private func disposeSession(_ session: Session) {

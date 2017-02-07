@@ -42,6 +42,8 @@ class Rapid {
         }
 
         Rapid.currentInstance = self
+    
+        Rapid.roomService.initialise()
     }
 
     internal func getProcessArguments() -> [String] {
