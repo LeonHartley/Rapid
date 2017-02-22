@@ -13,6 +13,10 @@ public class MessageHandler {
         self.registerMessage(id: Events.SSOTicketMessageEvent, SSOTicketMessageEvent())
         self.registerMessage(id: Events.CheckReleaseMessageEvent, CheckReleaseMessageEvent())
         self.registerMessage(id: Events.PlayerDataMessageEvent, PlayerDataMessageEvent())
+
+        // Catalog
+        self.registerMessage(id: Events.CatalogIndexMessageEvent, CatalogIndexMessageEvent())
+        self.registerMessage(id: Events.CatalogPageMessageEvent, CatalogPageMessageEvent())
     }
 
     public func registerMessage(id: Int, _ event: BufferProcessor) {

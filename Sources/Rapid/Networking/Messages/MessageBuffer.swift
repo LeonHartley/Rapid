@@ -44,9 +44,7 @@ public class MessageBuffer {
     }
 
     public func writeString(_ str: String) {
-        str.withCString { cstr in
-            hh_buffer_write_string(UnsafeMutablePointer(mutating: cstr), buffer)
-        }
+        hh_buffer_write_string(UnsafeMutablePointer(mutating: str), buffer)
     }
 
     public func initialise() {

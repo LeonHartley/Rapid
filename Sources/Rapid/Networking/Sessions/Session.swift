@@ -14,8 +14,8 @@ public class Session {
     private var eventDispatcher: DispatchQueue
 
     deinit {
-        if(self.player != nil) {
-            self.player?.onRemove()
+        if let player = self.player {
+            player.onRemove()
         }
     }
 
@@ -49,7 +49,8 @@ public class Session {
     }
 
     public func send(_ composer: MessageComposer) {
-        let buffer = MessageBuffer(hh_buffer_create_empty(1024))
+        // todo: dynamic buffers.. this is so baaaaaaaad
+        let buffer = MessageBuffer(hh_buffer_create_empty(1024*1024))
 
         buffer.initialise()
 

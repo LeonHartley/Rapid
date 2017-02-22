@@ -17,6 +17,7 @@ public class Player {
     }
 
     public func onRemove() {
+        // Do anything we need to do here, such as removing user from room or what.
         Log.info("Player \(self.data.username) logged out")
     }
 

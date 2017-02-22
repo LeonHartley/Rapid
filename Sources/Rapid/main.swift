@@ -12,6 +12,7 @@ Log.logger = helium
 
 Rapid.currentInstance.start()
 
+// If running in test mode, run any necessary tests here :)
 Rapid.roomService.loadRoom(byId: 1)
 
 while(true) {
@@ -22,7 +23,9 @@ while(true) {
         break
 
         case "stats":
-            Log.info("players online: \(Rapid.sessionStore.sessionCount()!)")
+            if let playerCount = Rapid.sessionStore.sessionCount() {
+                Log.info("players online: \(playerCount)")
+            }
         break
 
         default: 

@@ -9,4 +9,7 @@ public class Composers {
     public static let CurrencyBalanceMessageComposer = 188
     public static let CreditBalanceMessageComposer = 2203
     public static let PlayerObjectMessageComposer = 3716
+    public static let CatalogIndexMessageComposer = 1834
+    public static let CatalogPageMessageComposer = 2554
+
 }

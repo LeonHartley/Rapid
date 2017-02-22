@@ -7,6 +7,18 @@ git add *
 git commit -am ".."
 git tag 1.0.0
 
+cd ../../
+
+rm -rf Packages/Coerce-1.0.0/
+
+cd Modules/Coerce/
+rm -rf .git
+git init
+git add *
+git commit -am ".."
+git tag 1.0.0
+
+
 rm -rf Packages/Libuv-1.0.0/
 
 cd Modules/Libuv/

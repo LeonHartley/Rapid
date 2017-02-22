@@ -14,11 +14,12 @@ public class RoomService {
     }
 
     public func initialise() {
-        self.roomProcessingTimer = self.roomServiceDispatcher.createTimer(everyInterval: .milliseconds(500)) { 
+        self.roomProcessingTimer = DispatchQueue.roomDispatcher.createTimer(everyInterval: .milliseconds(500)) { 
             self.processRooms()
         }
         
         self.roomProcessingTimer?.resume()
+        Log.info("RoomService initialised")
     }
 
     public func loadRoom(byId id: Int) {
@@ -30,7 +31,7 @@ public class RoomService {
 
         let room = Room(roomData: roomData, roomModel: roomModel)
         
-        self.syncDispatcher.sync { 
+        DispatchQueue.roomSyncDispatcher.sync { 
             self.loadedRooms[room.data.id] = room
 
             Log.info("Room \(id), \(room.data.name) loaded successfully")
@@ -40,7 +41,7 @@ public class RoomService {
     private func processRooms() {
         var disposedRooms: [Room] = []
 
-        self.syncDispatcher.sync { 
+        DispatchQueue.roomSyncDispatcher.sync { 
             for (id, room) in self.loadedRooms {
                 if (room.playerCount == 0) {
                     room.incrementIdle()

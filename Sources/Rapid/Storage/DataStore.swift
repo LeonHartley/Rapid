@@ -16,6 +16,6 @@ class DataStore {
     }
 
     public static func getInstance() -> DataStore {
-        return dataStore!
+        return dataStore ?? DataStore()
     }
 }

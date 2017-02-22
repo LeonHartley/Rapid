@@ -36,23 +36,26 @@ class HHServer {
         }
 
         config.onMessageReceived = { client, message in
-            if let clientId = hh_client_id(client) {
-                if let uuid = UUID(uuidString: String(cString: clientId)) {
-                    if let session = Rapid.sessionStore.getSession(uuid) {
-                        let buffer = MessageBuffer(message!)
+            guard let clientId = hh_client_id(client) else {
+                return
+            }
 
-                        //msg length
-                        let _ = buffer.readInt()
+            guard let uuid = UUID(uuidString: String(cString: clientId)) else {
+                return
+            }
 
-                        // todo: if we don't have a full buffer, wait until we do and retry.
+            if let session = Rapid.sessionStore.getSession(uuid) {
+                let buffer = MessageBuffer(message!)
 
-                        let messageId = buffer.readShort()
+                //msg length
+                let _ = buffer.readInt()
 
-                        session.messageHandler().handleMessage(id: messageId, buffer: buffer)
+                // todo: if we don't have a full buffer, wait until we do and retry.
+                let messageId = buffer.readShort()
 
-                        buffer.freeBuffer()
-                    }
-                }
+                session.messageHandler().handleMessage(id: messageId, buffer: buffer)
+
+                buffer.freeBuffer()
             }
         }
 
