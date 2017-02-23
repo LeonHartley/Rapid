@@ -49,18 +49,8 @@ public class SessionStore {
     }
 
     public func broadcastAsync(_ composer: MessageComposer) {
-        var sessions: [Session] = []
-
-        defer {
-            sessions.removeAll()
-        }
-
-        let _ = DispatchQueue.sessionSyncDispatcher.sync { [unowned self] in 
-            sessions.append(contentsOf: Array(self.sessions.values))
-        }
-
-        let _ = DispatchQueue.sessionDispatcher.async {
-            for session in sessions {
+        DispatchQueue.sessionSyncDispatcher.async { [unowned self] in
+            for session in self.sessions.values {
                 session.send(composer)
             }
         }

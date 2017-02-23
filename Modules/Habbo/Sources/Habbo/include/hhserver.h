@@ -27,6 +27,7 @@ void hh_initialise_config(hh_server_config_t *configuration) {
     config = configuration;
 }
 
+
 void hh_start_server(char *ip, int port);
 
 void hh_write_message(hh_buffer_t* message, uv_stream_t *session);

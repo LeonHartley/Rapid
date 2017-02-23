@@ -4,6 +4,10 @@
 
 #pragma once
 
+#include <sys/resource.h>
+
+long hh_memory_usage();
+
 typedef struct {
     int index;
     int length;

@@ -4,9 +4,44 @@
 // Created by Leon on 18/10/2016.
 //
 
+#include <sys/sysinfo.h>
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
+
+#include "stdlib.h"
+#include "stdio.h"
+#include "string.h"
+
+int parseLine(char* line){
+    // This assumes that a digit will be found and the line ends in " Kb".
+    int i = strlen(line);
+    const char* p = line;
+    while (*p <'0' || *p > '9') p++;
+    line[i-3] = '\0';
+    i = atoi(p);
+    return i;
+}
+
+int getValue(){ //Note: this value is in KB!
+    FILE* file = fopen("/proc/self/status", "r");
+    int result = -1;
+    char line[128];
+
+    while (fgets(line, 128, file) != NULL){
+        if (strncmp(line, "VmSize:", 7) == 0){
+            result = parseLine(line);
+            break;
+        }
+    }
+    fclose(file);
+    return result;
+}
+
+
+long hh_memory_usage() {
+    return getValue();
+}
 
 hh_buffer_t *hh_buffer_create_empty(int length) {
     return hh_buffer_create((char*) malloc(length), length);

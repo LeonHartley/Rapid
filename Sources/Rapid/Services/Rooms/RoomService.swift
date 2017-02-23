@@ -6,19 +6,17 @@ extension Rapid {
 }
 
 public class RoomService {
-    private var roomProcessingTimer: DispatchSourceTimer?
+    private var roomProcessingTimer: EventTimer?
     private var loadedRooms: [Int: Room] = [:]
 
     init() {
-        
+
     }
 
     public func initialise() {
-        self.roomProcessingTimer = DispatchQueue.roomDispatcher.createTimer(everyInterval: .milliseconds(500)) { 
-            self.processRooms()
-        }
-        
-        self.roomProcessingTimer?.resume()
+        self.roomProcessingTimer = EventDispatcher.main.createTimer()
+        self.roomProcessingTimer?.start(500, 500, self.processRooms)
+
         Log.info("RoomService initialised")
     }
 
@@ -65,6 +63,6 @@ public class RoomService {
     }
 
     deinit {
-        self.roomProcessingTimer?.cancel()
+        self.roomProcessingTimer?.stop()
     }
 }

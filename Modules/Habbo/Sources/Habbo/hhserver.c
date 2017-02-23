@@ -72,6 +72,8 @@ void hh_on_read(uv_stream_t *handle, ssize_t nread, const uv_buf_t *buf) {
 void hh_on_new_connection(uv_stream_t *server, int status) {
     uv_tcp_t *client = (uv_tcp_t *) malloc(sizeof(uv_tcp_t));
 
+    printf("accepted connection on worker %s", server->loop);
+
     uv_tcp_init(server->loop, client);
 
     int result = uv_accept(server, (uv_stream_t *) client);

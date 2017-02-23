@@ -2,10 +2,17 @@
     "server": {
         "host": "0.0.0.0",
         "port": 3000,
-        "workers": 2
+        "workers": 4
     },
 
     "datastore": {
+        "repositories": {
+            "playerRepository": "redis",
+            "roomRepository": "redis",
+            "roomModelRepository": "redis",
+            "catalogRepository": "rapid"
+        },
+
         "type": "redis",
 
         "redis": {
@@ -16,6 +23,18 @@
 
         "mysql": {
 
+        },
+
+        "mongodb": {
+            
+        }
+    },
+
+    "game": {
+        "hotelName": "Rapid Test Hotel",
+        "motd": {
+            "enabled": true,
+            "message": "Welcome to ${config.hotelName}, "
         }
     }
 }

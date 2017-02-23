@@ -23,6 +23,8 @@ while(true) {
         break
 
         case "stats":
+            Log.info("memory usage: \(hh_memory_usage() / 1024) KB")
+
             if let playerCount = Rapid.sessionStore.sessionCount() {
                 Log.info("players online: \(playerCount)")
             }

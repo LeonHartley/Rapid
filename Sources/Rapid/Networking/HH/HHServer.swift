@@ -14,6 +14,7 @@ class HHServer {
 
     init() {
         config.onConnection = { client in
+            print(Thread.current)
             if let clientId = hh_client_id(client) {
 
                 if let uuid = UUID(uuidString: String(cString: clientId)) {

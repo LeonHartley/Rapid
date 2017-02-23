@@ -1,11 +1,8 @@
 import LoggerAPI
 
-class RedbirdRepository {
-    internal var dataStore: RedbirdDataStore
-
+class RedbirdRepository: Repository<RedbirdDataStore> {
     public init(_ dataStore: RedbirdDataStore) {
-        self.dataStore = dataStore
-
+        super.init(dataStore: dataStore)
         self.initialise()
 
         Log.info("Initialised \(String(describing: type(of: self))) repository")

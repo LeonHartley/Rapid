@@ -40,7 +40,7 @@ class Rapid {
         } else if(dataStoreType == "mysql") {
             DataStore.setInstance(MySQLDataStore())
         }
-        
+
         DataStore.getInstance().configure()
     }
 
