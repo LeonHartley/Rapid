@@ -1,6 +1,5 @@
 
 class CurrencyBalanceMessageComposer: MessageComposer {
-
     private var currencies: [Int:Int]
 
     public init(_  currencies: [Int:Int]) {

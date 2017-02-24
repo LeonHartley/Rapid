@@ -5,6 +5,10 @@ extension Rapid {
     public static let roomService: RoomService = RoomService()
 }
 
+extension EventDispatcher {
+    public static let roomDispatcher = EventDispatcher(queue: DispatchQueue.roomDispatcher)
+}
+
 public class RoomService {
     private var roomProcessingTimer: EventTimer?
     private var loadedRooms: [Int: Room] = [:]
@@ -14,14 +18,17 @@ public class RoomService {
     }
 
     public func initialise() {
-        self.roomProcessingTimer = EventDispatcher.main.createTimer()
+        self.roomProcessingTimer = EventDispatcher.roomDispatcher.createTimer()
         self.roomProcessingTimer?.start(500, 500, self.processRooms)
 
         Log.info("RoomService initialised")
     }
 
     public func loadRoom(byId id: Int) {
-        let roomData = RoomData(id: id, name: "Leon's Room", ownerId: 1)
+        guard let roomData = DataStore.roomRepository?.findRoom(byId: id) else {
+            // Room doesn't exist.
+            return
+        }
 
         guard let roomModel = Rapid.roomModelService.findModel(byName: "model_a") else {
             return

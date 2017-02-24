@@ -12,13 +12,16 @@ public class PlayerData {
     private(set) public var credits: Int
     private(set) public var gender: Gender
 
-    public init(id: Int, username: String, figure: String, motto: String, credits: Int, gender: Gender) {
+    private(set) public var rooms: [Int]
+
+    public init(id: Int, username: String, figure: String, motto: String, credits: Int, gender: Gender, rooms: [Int]) {
         self.id = id
         self.username = username
         self.figure = figure
         self.motto = motto
         self.credits = credits
         self.gender = gender
+        self.rooms = rooms
     }
 
     public func setUsername(_ username: String) {
@@ -43,5 +46,17 @@ public class PlayerData {
 
     public func setGender(_ gender: Gender) {
         self.gender = gender
+    }
+
+    public func addRoom(_ roomId: Int) {
+        self.rooms.append(roomId)
+    }
+
+    public func removeRoom(_ roomId: Int) {
+        guard let roomIndex = self.rooms.index(of: roomId) else {
+            return
+        }
+
+        self.rooms.remove(at: roomIndex)
     }
 }

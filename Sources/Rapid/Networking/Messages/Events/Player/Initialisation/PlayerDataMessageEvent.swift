@@ -7,7 +7,6 @@ class PlayerDataMessageEvent: MessageEvent<PlayerDataMessageParser> {
         }
 
         player.getSession().send(PlayerObjectMessageComposer(playerData: player.getData()))
-
-       // let 
+        player.getSession().send(AllowancesMessageComposer(forRank: 1, Rapid.permissionService.perkPermissions))
     }
 }

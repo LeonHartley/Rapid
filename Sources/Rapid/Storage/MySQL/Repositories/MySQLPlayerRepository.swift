@@ -55,7 +55,8 @@ class MySQLPlayerRepository: MySQLRepository, PlayerRepository {
                     figure: player.figure,
                     motto: player.motto,
                     credits: player.credits,
-                    gender: player.gender.lowercased() == "m" ? .male : .female
+                    gender: player.gender.lowercased() == "m" ? .male : .female,
+                    rooms: []
                 )
             }
         } catch {

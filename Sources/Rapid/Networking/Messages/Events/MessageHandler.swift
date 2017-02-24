@@ -17,6 +17,10 @@ public class MessageHandler {
         // Catalog
         self.registerMessage(id: Events.CatalogIndexMessageEvent, CatalogIndexMessageEvent())
         self.registerMessage(id: Events.CatalogPageMessageEvent, CatalogPageMessageEvent())
+
+        // Navigator
+        self.registerMessage(id: Events.InitNavigatorMessageEvent, InitNavigatorMessageEvent())
+        self.registerMessage(id: Events.LoadCategoriesMessageEvent, LoadCategoriesMessageEvent())
     }
 
     public func registerMessage(id: Int, _ event: BufferProcessor) {
@@ -28,7 +32,7 @@ public class MessageHandler {
     }
 
     public func registerEvents() {
-        
+
     }
 
     public func handleMessage(id: Int16, buffer: MessageBuffer) {

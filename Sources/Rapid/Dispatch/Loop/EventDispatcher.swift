@@ -12,6 +12,7 @@ import Habbo
  * The provided DispatchQueue is used to execute the eventloop (let libdispatch find us a thread!)
  */
 public class EventDispatcher {
+    private static let syncDispatcher = DispatchQueue(label: "EventDispatcherSync")
     public static let main = EventDispatcher(queue: DispatchQueue(label: "EventDispatcher", attributes: .concurrent))
 
     private var eventLoop: UnsafeMutablePointer<uv_loop_t> = UnsafeMutablePointer<uv_loop_t>.allocate(capacity: 1)
@@ -20,12 +21,12 @@ public class EventDispatcher {
     public init(queue: DispatchQueue) {
         self.queue = queue
 
+        // todo: create a pool of event loops.
         uv_loop_init(self.eventLoop)
 
         self.queue.async {
             uv_run(self.eventLoop, UV_RUN_DEFAULT)
         }
-        // create an event loop and execute it in a libdispatch thread.
     }
 
     public func createTimer() -> EventTimer {

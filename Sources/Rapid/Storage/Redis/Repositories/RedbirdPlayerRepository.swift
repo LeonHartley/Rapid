@@ -22,13 +22,23 @@ class RedbirdPlayerRepository: RedbirdRepository, PlayerRepository {
                 return nil
             }
 
+            var rooms: [Int] = []
+            let splitRooms = (playerObject["rooms"] ?? "").components(separatedBy: ",")
+
+            for roomId in splitRooms {
+                if let roomIdInt = Int(roomId) {
+                    rooms.append(roomIdInt)
+                }
+            }
+
             let playerData = PlayerData(
                 id: Int(playerId)!,
                 username: playerObject["username"]!,
                 figure: playerObject["figure"]!,
                 motto: playerObject["motto"]!,
                 credits: Int(playerObject["credits"]!)!,
-                gender: playerObject["gender"]!.lowercased() == "m" ? .male : .female
+                gender: playerObject["gender"]!.lowercased() == "m" ? .male : .female,
+                rooms: rooms
             )
 
             return playerData

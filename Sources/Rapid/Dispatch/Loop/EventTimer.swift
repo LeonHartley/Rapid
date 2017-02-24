@@ -35,7 +35,7 @@ public class EventTimer {
 
         self.timer.pointee.data = UnsafeMutableRawPointer(context)
 
-        uv_timer_start(self.timer, timerStart, 0, UInt64(delayMilliseconds))
+        uv_timer_start(self.timer, timerStart, UInt64(startDelayMilliseconds), UInt64(delayMilliseconds))
     }
 
     public func stop() {

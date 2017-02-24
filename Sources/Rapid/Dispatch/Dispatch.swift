@@ -51,6 +51,11 @@ extension DispatchQueue {
 	 */
 	public static let catalogSyncDispatcher = DispatchQueue(label: "CatalogDispatcher")
 
+	/**
+	 * Permission synchronisation is dispatched to this queue
+	 */
+	public static let permissionSyncDispatcher = DispatchQueue(label: "PermissionSyncDispatcher")
+
 	/*
 	 * Executes a method every chosen interval
 	 */

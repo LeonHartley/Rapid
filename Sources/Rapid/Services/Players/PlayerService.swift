@@ -32,7 +32,7 @@ class PlayerService {
             self.addPlayer(player)
             session.addPlayer(player)
         } else {
-//            session.close()
+            session.close()
         }
     }
 

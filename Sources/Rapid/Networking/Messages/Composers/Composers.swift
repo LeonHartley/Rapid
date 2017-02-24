@@ -11,5 +11,7 @@ public class Composers {
     public static let PlayerObjectMessageComposer = 3716
     public static let CatalogIndexMessageComposer = 1834
     public static let CatalogPageMessageComposer = 2554
-
+    public static let NavigatorPreferencesMessageComposer = 2445
+    public static let NavigatorMetaDataMessageComposer = 1713
+    public static let RoomCategoriesMessageComposer = 943
 }

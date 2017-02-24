@@ -6,26 +6,34 @@ class RedbirdRoomRepository: RedbirdRepository, RoomRepository {
     }
 
     func findRoom(byId id: Int) -> RoomData? {
-        // if let transaction = self.dataStore.createTransaction() {
-        //     defer {
-        //         self.dataStore.closeTransaction(transaction)
-        //     }
+         if let transaction = self.dataStore.createTransaction() {
+             defer {
+                 self.dataStore.closeTransaction(transaction)
+             }
 
-        //     guard let roomModelObject = transaction.object(forKey: "rapid.room:\(id)") else {
-        //         return nil
-        //     }
+             guard let roomDataObject = transaction.object(forKey: "rapid.rooms:\(id)") else {
+                 return nil
+             }
 
-        //     // let roomData = RoomData(
-        //     //     id: id,
-        //     //     doorX: Int(roomModelObject["doorX"]!)!,
-        //     //     doorY: Int(roomModelObject["doorY"]!)!,
-        //     //     doorZ: Double(roomModelObject["doorZ"]!)!,
-        //     //     doorDirection: Int(roomModelObject["doorDirection"]!)!,
-        //     //     heightmapData: roomModelObject["heightmap"]!
-        //     // )
+             let roomObject = RoomData(id: id,
+                     name: roomDataObject["name"] ?? "Unknown",
+                     description: roomDataObject["description"] ?? "",
+                     groupId: Int(roomDataObject["groupId"] ?? "0") ?? 0,
+                     ownerId: Int(roomDataObject["ownerId"] ?? "0") ?? 0,
+                     ownerName: roomDataObject["ownerName"] ?? "Unknown",
+                     tags: [],
+                     accessType: RoomAccessType.accessType(forString: roomDataObject["accessType"] ?? "open"),
+                     password: roomDataObject["password"] ?? "",
+                     categoryId: Int(roomDataObject["categoryId"] ?? "0") ?? 0,
+                     maxPlayers: Int(roomDataObject["maxPlayers"] ?? "10") ?? 10,
+                     allowPets: Bool(roomDataObject["allowPets"] ?? "false") ?? false,
+                     allowEntityWalkThrough: Bool(roomDataObject["allowEntityWalkThrough"] ?? "false") ?? false,
+                     banState: RoomBanState.banState(forString: roomDataObject["banState"] ?? "none"),
+                     muteState: RoomMuteState.muteState(forString: roomDataObject["muteState"] ?? "none"),
+                     kickState: RoomKickState.kickState(forString: roomDataObject["kickState"] ?? "none"))
 
-        //     return nil
-        // }
+             return roomObject
+         }
 
         return nil
     }   

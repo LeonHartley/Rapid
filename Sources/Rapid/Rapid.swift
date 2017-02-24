@@ -58,6 +58,7 @@ class Rapid {
 
         Rapid.roomService.initialise()
         Rapid.catalogService.initialise()
+        Rapid.permissionService.initialise()
 
         for _ in 1...workers {
             Log.info("Starting networking server on tcp://\(host):\(port)");
