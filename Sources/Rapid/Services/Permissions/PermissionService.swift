@@ -12,10 +12,22 @@ extension Rapid {
 
 public class PermissionService {
 
-    private(set) public var perkPermissions: [PerkPermission] = []
+    private var perkPermissionsList: [PerkPermission] = []
 
     public init() {
 
+    }
+
+    public var perkPermissions: [PerkPermission] {
+        get {
+            var perkPermissions: [PerkPermission] = []
+
+            DispatchQueue.permissionSyncDispatcher.sync {
+                perkPermissions.append(contentsOf: self.perkPermissionsList)
+            }
+
+            return perkPermissions
+        }
     }
 
     public func initialise() {
@@ -28,8 +40,8 @@ public class PermissionService {
 
     public func initialise(perkPermissions: [PerkPermission]) {
         DispatchQueue.permissionSyncDispatcher.sync {
-            self.perkPermissions.removeAll()
-            self.perkPermissions = perkPermissions
+            self.perkPermissionsList.removeAll()
+            self.perkPermissionsList = perkPermissions
         }
     }
 }

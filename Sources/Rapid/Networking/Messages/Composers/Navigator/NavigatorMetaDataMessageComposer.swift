@@ -22,6 +22,6 @@ class NavigatorMetaDataMessageComposer: MessageComposer {
     }
 
     func getId() -> Int {
-        return Composers.NavigatorPreferencesMessageComposer
+        return Composers.NavigatorMetaDataMessageComposer
     }
 }

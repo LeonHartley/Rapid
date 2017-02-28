@@ -12,11 +12,39 @@ extension Rapid {
 
 public class CatalogService {
 
-    private(set) public var catalogPages: [Int: CatalogPage] = [:]
-    private(set) public var catalogItems: [Int: CatalogItem] = [:]
+    private var catalogPagesMap: [Int: CatalogPage] = [:]
+    private var catalogItemsMap: [Int: CatalogItem] = [:]
 
     public init() {
 
+    }
+
+    public var catalogPages: [Int: CatalogPage] {
+        get {
+            var catalogPages: [Int: CatalogPage] = [:]
+
+            DispatchQueue.catalogSyncDispatcher.sync {
+                for (id, catalogPage) in self.catalogPagesMap{
+                    catalogPages[id] = catalogPage
+                }
+            }
+
+            return catalogPages
+        }
+    }
+
+    public var catalogItems: [Int: CatalogItem] {
+        get {
+            var catalogItems: [Int: CatalogItem] = [:]
+
+            DispatchQueue.catalogSyncDispatcher.sync {
+                for (id, catalogItem) in self.catalogItemsMap {
+                    catalogItems[id] = catalogItem
+                }
+            }
+
+            return catalogItems
+        }
     }
 
     public func initialise() {
@@ -33,25 +61,25 @@ public class CatalogService {
 
     private func initialise(pages: [String: CatalogPage]) {
         DispatchQueue.catalogSyncDispatcher.sync {
-            self.catalogPages.removeAll()
+            self.catalogPagesMap.removeAll()
 
             for (_, page) in pages {
-                self.catalogPages[page.id] = page
+                self.catalogPagesMap[page.id] = page
             }
        }
     }
 
     private func initialise(pages: [Int: CatalogPage]) {
         DispatchQueue.catalogSyncDispatcher.sync {
-            self.catalogPages.removeAll()
-            self.catalogPages = pages
+            self.catalogPagesMap.removeAll()
+            self.catalogPagesMap = pages
         }
     }
 
     private func initialise(items: [Int: CatalogItem]) {
         DispatchQueue.catalogSyncDispatcher.sync {
-            self.catalogItems.removeAll()
-            self.catalogItems = items
+            self.catalogItemsMap.removeAll()
+            self.catalogItemsMap = items
         }
     }
 }
